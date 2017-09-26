@@ -1,4 +1,4 @@
-//
+﻿//
 //  main.c
 //  HW1
 //
@@ -148,8 +148,22 @@ void merge_sort(int count,int* array){
     merge_array(left_count,right_count,left_arr, right_arr, array);
 }
 
-void randomized_quick_sort(){
-    
+void randomized_quick_sort(int count, int *array){
+    int ran_index = rand()%count;
+    int left_arr[count];
+    int right_count[count];
+    int left_count = 0, right_count = 0;	
+    int mid = array[ran_index];
+    for(int i=0;i<count;i++){
+	if (array[i]<mid){
+	    left_arr[left_count]=array[i];
+	    left_count++;
+	}else{
+	
+	
+	}	
+
+    }
 }
 
 
