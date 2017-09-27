@@ -183,6 +183,7 @@ void randomized_quick_sort(int count, int *array){
             array[i]= mid;
         }
     }
+    //print_Array_stars(true);
 }
 
 
