@@ -151,18 +151,37 @@ void merge_sort(int count,int* array){
 void randomized_quick_sort(int count, int *array){
     int ran_index = rand()%count;
     int left_arr[count];
-    int right_count[count];
-    int left_count = 0, right_count = 0;	
+    int right_arr[count];
+    int left_count = 0, right_count = 0;
     int mid = array[ran_index];
     for(int i=0;i<count;i++){
-	if (array[i]<mid){
-	    left_arr[left_count]=array[i];
-	    left_count++;
-	}else{
-	
-	
-	}	
-
+        if (i==ran_index) {
+            continue;
+        }
+        if (array[i]<mid){
+            left_arr[left_count]=array[i];
+            left_count++;
+        }else{
+            right_arr[right_count]=array[i];
+            right_count++;
+        }
+        
+    }
+    if (left_count>1) {
+        randomized_quick_sort(left_count, left_arr);
+    }
+    if (right_count>1) {
+        randomized_quick_sort(right_count, right_arr);
+    }
+    
+    for (int i=0; i<left_count+1+right_count; i++) {
+        if (i<left_count) {
+            array[i] = left_arr[i];
+        }else if (i>left_count){
+            array[i] = right_arr[i-left_count-1];
+        }else{
+            array[i]= mid;
+        }
     }
 }
 
@@ -201,6 +220,9 @@ int main(int argc, const char * argv []) {
                 break;
             case 3:
                 merge_sort(_count, _array);
+                break;
+            case 4:
+                randomized_quick_sort(_count,_array);
                 break;
             default:
                 
