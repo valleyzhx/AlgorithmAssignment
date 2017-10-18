@@ -54,16 +54,19 @@ void swap(int *a , int *b)
 
 void each_heap_sort(int RandomArray[],int n ,int size)
 {
-    int left=2*n;
-    int right=2*n+1;
+    int left=2*n+1;
+    int right=2*n+2;
     int max=n;
     if(left<size && RandomArray[left]>RandomArray[max])
     {max=left;}
     if(right<size && RandomArray[right]>RandomArray[max])
     {max=right;}
     if(max!=n)
-    {swap(&RandomArray[n],&RandomArray[max]);}
-    //each_heap_sort(RandomArray,max,size);
+    {
+        swap(&RandomArray[n],&RandomArray[max]);
+        each_heap_sort(RandomArray,max,size);
+    }
+    
 }
 
 void heap_sort(int RandomArray[],int size)
@@ -71,13 +74,13 @@ void heap_sort(int RandomArray[],int size)
     int deep;
     for(deep=size/2;deep>=1;deep--)
     {
-        each_heap_sort(RandomArray,deep,size);
+        each_heap_sort(RandomArray,deep-1,size);
     }
     int i;
     for(i=size;i>=2;i--)
     {
         swap(&RandomArray[0],&RandomArray[i-1]);
-        each_heap_sort(RandomArray,1,i-1);
+        each_heap_sort(RandomArray,0,i-1);
         print_array(RandomArray,size);
         print_star(RandomArray,size);
     }

@@ -90,7 +90,7 @@ void heapSort(int array[], int count){
         print_Array_stars(array, count, ++step);
     }
     
-    for (int i=count-1; i>=0; i--)
+    for (int i=count-1; i>=1; i--)
     {
         int temp = array[0];
         array[0] = array[i];
