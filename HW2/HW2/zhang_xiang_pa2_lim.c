@@ -17,15 +17,26 @@
 
 
 void printArray(large_int array){
+    bool shouldStart = false;
     for (int i=0; ; i++) {
         if (array[i]>=0) {
-            printf("%d ",array[i]);
+            if (array[i]>0) {
+                shouldStart = true;
+            }
+            if (shouldStart) {
+                printf("%d ",array[i]);
+            }
         }else{
             break;
         }
     }
     printf("\n");
 }
+
+
+
+
+
 
 large_int generateInteger(int digit){
     large_int num = malloc(sizeof(int)*(digit+1));
@@ -89,13 +100,26 @@ int digts_large_int(large_int num){
     }
     return count;
 }
+
+int convert_to_int(large_int large){
+   int digits = digts_large_int(large);
+    int result = 0;
+    int loop = 0;
+    while (digits--) {
+        result += large[digits]*pow(10, loop++);
+    }
+    return result;
+}
+
+
+
 //
 //
 large_int add_function(large_int A,large_int B){
     int a_len = digts_large_int(A);
     int b_len = digts_large_int(B);
-    printArray(A);
-    printArray(B);
+//    printArray(A);
+//    printArray(B);
     
     int max_len = fmax(a_len, b_len);
     int length = max_len;
@@ -133,6 +157,21 @@ void add_digits(large_int *large,int count){
     (*large)[len+count] = -1;
 }
 
+large_int insert_zero_infront(large_int large,int count){
+    if (count == 0) {
+        return large;
+    }
+    int len = digts_large_int(large);
+    large_int new_large = (int*)malloc(sizeof(int)*(len+count+1));
+    for (int i=0; i<=len+count; i++) {
+        if (i<count) {
+            new_large[i] = 0;
+        }else{
+            new_large[i] = large[i-count];
+        }
+    }
+    return new_large;
+}
 
 
 large_int large_int_multiplication(large_int u, large_int v, int digit){
@@ -148,8 +187,8 @@ large_int large_int_multiplication(large_int u, large_int v, int digit){
     
     if (digit<=kThreshold) {
         
-        int u_Num = *(u)*10+*(u+1);
-        int v_num = *(v)*10+*(v+1);
+        int u_Num = convert_to_int(u);
+        int v_num = convert_to_int(v);
         
         return convert_to_large_int(u_Num*v_num);
     }
@@ -184,47 +223,47 @@ large_int large_int_multiplication(large_int u, large_int v, int digit){
     free(x);free(y);free(z);
 
     add_digits(&ax, 4*k);
-    printf("ax: ");
-    printArray(ax);
+//    printf("ax: ");
+//    printArray(ax);
     
     large_int ay_bx = add_function(ay, bx);
     add_digits(&ay_bx, 3*k);
-    printf("ay_bx: ");
-    printArray(ay_bx);
+//    printf("ay_bx: ");
+//    printArray(ay_bx);
     free(ay);
     free(bx);
     
     large_int az_by = add_function(az, by);
-    printf("az_by: ");
-    printArray(az_by);
+//    printf("az_by: ");
+//    printArray(az_by);
     free(az);
     free(by);
     
     
     large_int az_by_cz = add_function(az_by, cx);
     add_digits(&az_by_cz, 2*k);
-    printf("az_by_cz: ");
-    printArray(az_by_cz);
+//    printf("az_by_cz: ");
+//    printArray(az_by_cz);
     free(az_by);
     free(cx);
     
     large_int bz_cy = add_function(bz, cy);
     add_digits(&bz_cy, k);
-    printf("bz_cy: ");
-    printArray(bz_cy);
+//    printf("bz_cy: ");
+//    printArray(bz_cy);
     free(bz);
     free(cy);
 
-    printf("\n");
+    //printf("\n");
     large_int first = add_function(ax, ay_bx);
-    printf("ax+ay_bx: ");
-    printArray(first);
+//    printf("ax+ay_bx: ");
+//    printArray(first);
     free(ax);
     free(ay_bx);
     
     large_int second = add_function(az_by_cz, bz_cy);
-    printf("az_by_cz+bz_cy: ");
-    printArray(second);
+//    printf("az_by_cz+bz_cy: ");
+//    printArray(second);
     free(az_by_cz);
     free(bz_cy);
     
@@ -239,6 +278,59 @@ large_int large_int_multiplication(large_int u, large_int v, int digit){
     return result;
 }
 
+large_int standard_large_int_multiplication(large_int u, large_int v, int digit){
+    if (is_zero(u, digit)||is_zero(v, digit)) {
+        large_int large = malloc(sizeof(int)*(digit+1));
+        for (int i=0; i<digit; i++) {
+            *(large+i) = 0;
+        }
+        *(large+digit) = -1;
+        return large;
+    }
+    if (digit<=kThreshold) {
+        int u_Num = convert_to_int(u);
+        int v_num = convert_to_int(v);
+        return convert_to_large_int(u_Num*v_num);
+    }
+    //u	× v =	xw	× 102m +	(xz	+	wy)	× 10m +	yz
+    
+    int k = digit/2;
+    
+    large_int x = copy_from(u, 0, k);
+    large_int y = copy_from(u, k, k);
+    
+    large_int w = copy_from(v, 0, k);
+    large_int z = copy_from(v, k, k);
+    
+    large_int xw = standard_large_int_multiplication(x, w, k);
+    large_int xz = standard_large_int_multiplication(x, z, k);
+    large_int wy = standard_large_int_multiplication(w, y, k);
+    large_int yz = standard_large_int_multiplication(y, z, k);
+
+    free(x);free(y);free(w);free(z);
+    
+    
+    
+    large_int xz_wy = add_function(xz, wy);
+    
+    
+    add_digits(&xw, 2*k);
+    add_digits(&xz_wy, k);
+    
+    large_int first = add_function(xw, xz_wy);
+    large_int result = add_function(first, yz);
+    
+    free(xw);free(xz);free(wy);free(yz);
+    free(xz_wy);free(first);
+    
+    
+    return result;
+
+}
+
+
+
+
 
 int main(int argc, const char * argv[]) {
     // insert code here...
@@ -247,30 +339,57 @@ int main(int argc, const char * argv[]) {
 
     int n = 1;
     while (1) {
-        
+        printf("input an n digits integer,n = 6k:");
+        scanf("%d",&n);
+
         while (n%6 != 0) {
-            printf("input an n digits integer,n=6k:");
+            printf("n is not 6*k, please input again");
             scanf("%d",&n);
         }
-        int a = n/6;
-        if (n!=6 && a%3 != 0) {
-            int changeN = 6*(a+3-a%3);
-            if (n!=changeN) {
-                printf("to ensure always have 6k digits, input changed to %d\n",changeN);
-                n = changeN;
-            }
-        }
-        
         
         large_int A = generateInteger(n);
         large_int B = generateInteger(n);
         
+        int a = n/6;
+        int change_n = n;
+        if (n!=6 && a%3 != 0) {
+            change_n = 6*(a+3-a%3);
+        }
         
-        //digts_large_int(A);
+        large_int cus_A = insert_zero_infront(A, change_n-n);
+        large_int cus_B = insert_zero_infront(B, change_n-n);
 
-        large_int C = large_int_multiplication(A,B,n);
-        printf("=\n");
+        large_int C = large_int_multiplication(cus_A,cus_B,change_n);
+        printf("=\n\n");
         printArray(C);
+        
+        if (change_n != n) {
+            free(cus_A);
+            free(cus_B);
+        }
+        
+     
+        a = ceil(log2(n));
+        change_n = pow(2, a);
+        large_int std_A = insert_zero_infront(A, change_n-n);
+        large_int std_B = insert_zero_infront(B, change_n-n);
+        
+        large_int std_C = standard_large_int_multiplication(std_A,std_B,change_n);
+        printf("\n");
+        printf("standard large multiplication result:\n");
+        printArray(std_C);
+        printf("\n");
+        
+        if (change_n != n) {
+            free(std_A);
+            free(std_B);
+        }
+        
+        
+        free(A);
+        free(B);
+        free(C);
+        free(std_C);
         
         
         n=1;
