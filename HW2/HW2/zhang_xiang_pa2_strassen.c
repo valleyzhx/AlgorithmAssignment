@@ -133,6 +133,15 @@ void strassen_matrix_multiply(int n, int *A, int *B, int *C){
             }
         }
     }
+    free(A11);free(A12);free(A21);free(A22);
+    free(B11);free(B12);free(B21);free(B22);
+
+    
+    free(A11_p_A22);free(B11_p_B22);free(A21_p_A22);free(A11_p_A12);
+    free(B11_p_B12);free(B21_p_B22);free(B12_r_B22);free(B21_r_B11);
+    free(A21_r_A11);free(A12_r_A22);
+    
+    free(m1);free(m2);free(m3);free(m4);free(m5);free(m6);free(m7);
 }
 
 

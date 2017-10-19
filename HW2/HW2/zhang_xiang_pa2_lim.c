@@ -163,6 +163,7 @@ large_int large_int_multiplication(large_int u, large_int v, int digit){
     large_int y = copy_from(v, k, k);
     large_int z = copy_from(v, 2*k, k);
     
+    
     //    Let A = a | b | c = a * 10 ^(2k) + b * 10 ^ (k) + c;
     //    Let B = x | y | z = x * 10 ^(2k) + y * 10 ^ (k) + z;
     //    A * B = ax * 10^4k + (ay + bx) * 10^3k + (az + by + cx ) * 10^2k + (bz + cy) * 10^k + cz
@@ -182,43 +183,60 @@ large_int large_int_multiplication(large_int u, large_int v, int digit){
     free(a);free(b);free(c);
     free(x);free(y);free(z);
 
-//    printf("ax\n");
-//    printArray(ax);
     add_digits(&ax, 4*k);
-//    printf("ax add 0\n");
-//    printArray(ax);
+    printf("ax: ");
+    printArray(ax);
     
     large_int ay_bx = add_function(ay, bx);
-    printf("ay_bx\n");
-    printArray(ay_bx);
     add_digits(&ay_bx, 3*k);
-    printf("ay_bx ad 000\n");
+    printf("ay_bx: ");
     printArray(ay_bx);
+    free(ay);
+    free(bx);
     
     large_int az_by = add_function(az, by);
-    printf("az_by\n");
+    printf("az_by: ");
     printArray(az_by);
+    free(az);
+    free(by);
     
     
     large_int az_by_cz = add_function(az_by, cx);
     add_digits(&az_by_cz, 2*k);
-    
-    printf("az_by_cz\n");
+    printf("az_by_cz: ");
     printArray(az_by_cz);
+    free(az_by);
+    free(cx);
     
     large_int bz_cy = add_function(bz, cy);
     add_digits(&bz_cy, k);
-    printf("bz_cy\n");
+    printf("bz_cy: ");
     printArray(bz_cy);
-    
+    free(bz);
+    free(cy);
+
     printf("\n");
     large_int first = add_function(ax, ay_bx);
-    printf("ax+ay_bx\n");
+    printf("ax+ay_bx: ");
     printArray(first);
+    free(ax);
+    free(ay_bx);
+    
     large_int second = add_function(az_by_cz, bz_cy);
-    printf("az_by_cz+bz_cy\n");
+    printf("az_by_cz+bz_cy: ");
     printArray(second);
-    return add_function(add_function(first, second), cz);
+    free(az_by_cz);
+    free(bz_cy);
+    
+    large_int fir_sec = add_function(first, second);
+    free(first);
+    free(second);
+    
+    large_int result = add_function(fir_sec, cz);
+    free(fir_sec);
+    free(cz);
+    
+    return result;
 }
 
 
@@ -235,7 +253,7 @@ int main(int argc, const char * argv[]) {
             scanf("%d",&n);
         }
         int a = n/6;
-        if (a%3 != 0) {
+        if (n!=6 && a%3 != 0) {
             int changeN = 6*(a+3-a%3);
             if (n!=changeN) {
                 printf("to ensure always have 6k digits, input changed to %d\n",changeN);
