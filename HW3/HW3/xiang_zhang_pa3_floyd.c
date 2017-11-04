@@ -49,7 +49,7 @@ int main(int argc, const char * argv[]) {
 
     srand((int)time(NULL));
     
-    n = 9;//rand()%6 + 5;
+    n = rand()%6 + 5;
     printf("%d vertices are created!\n",n);
     
     int A[n][n];
