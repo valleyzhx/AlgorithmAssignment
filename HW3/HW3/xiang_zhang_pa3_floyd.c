@@ -35,7 +35,10 @@ void printPaths(int *A, int *P, int i, int j, int *length){
         printPaths(A,P,i,k,length);
         printPaths(A, P, k, j, length);
     }else{
-        printf(" > (%d,%d)",i,j);
+        if (*length != 0) {
+            printf(" -> ");
+        }
+        printf("(%d,%d)",i,j);
         *length += A[i*n+j];
     }
 }
@@ -51,13 +54,11 @@ int main(int argc, const char * argv[]) {
     
     int A[n][n];
     int P[n][n];
-    int C[n][n];
 
     for (int i=0; i<n; i++) {
         for (int j=0; j<n; j++) {
             A[i][j] = 0;
             P[i][j] = 0;
-            C[i][j] = 0;
         }
     }
     for (int i=0; i<n; i++) {
@@ -90,12 +91,9 @@ int main(int argc, const char * argv[]) {
     
     
     for (int i=0; i<n; i++) {
-        for (int j=0; j<n; j++) {
-            if (i == j||C[j][i]) {
-                continue;
-            }
-            C[i][j] = 1;
-            printf("path (%d,%d):",i,j);
+        for (int j=i+1; j<n; j++) {
+            
+            printf("path (%d,%d) == ",i,j);
             int length = 0;
             printPaths((int*)A, (int*)P, i, j, &length);
             printf(" length %d\n",length);
