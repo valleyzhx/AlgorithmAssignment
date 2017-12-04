@@ -7,7 +7,7 @@
 //
 
 #include "HW5.h"
-#define DEBUG 1
+#define TEST 0
 
 typedef struct{
     int profit;
@@ -274,7 +274,7 @@ int main(int argc, const char * argv[]) {
     srand((unsigned int)time(0));
     int num = 4+rand()%5;
     Item array[8];
-    if (DEBUG) {
+    if (TEST) {
         creatTestItems(array, &num);
     }else{
         createItems(array, num);
