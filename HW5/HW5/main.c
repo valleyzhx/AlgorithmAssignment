@@ -6,19 +6,35 @@
 //  Copyright © 2017年 Xiang. All rights reserved.
 //
 
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdbool.h>
+#include "HW5.h"
+#define DEBUG 1
 
 typedef struct{
     int profit;
     int weight;
 }Item;
 
-
 int _W;
+
+void creatTestItems(Item array[],int *num){
+    Item item0 = {16,5};
+    Item item1 = {25,20};
+    Item item2 = {15,18};
+    Item item3 = {15,9};
+    Item item4 = {19,16};
+    Item item5 = {28,19};
+    Item item6 = {21,17};
+    Item item7 = {22,11};
+    
+    *num = 8;
+    array[0]=item0;array[1]=item1;array[2]=item2;array[3]=item3;
+    array[4]=item4;array[5]=item5;array[6]=item6;array[7]=item7;
+    int sum = item0.weight+item1.weight+item2.weight+item3.weight+
+              item4.weight+item5.weight+item6.weight+item7.weight;
+    _W = (int)(0.6*sum);
+
+}
+
 
 void createItems(Item array[],int num){
     int i = 0;
@@ -72,10 +88,15 @@ void brute_force_method(Item array[],int num){
             max = value;
             saveWeight = weight;
             index = i;
+        }else if(value == max){
+            if (weight < saveWeight) {
+                saveWeight = weight;
+                index = i;
+            }
         }
     }
     
-    printf("brute_force_method total profile: %d, weight: %d\nIt contains:\n",max,saveWeight);
+    printf("brute_force_method => contains:\n");
     int get_first = pow(2, num-1);
     for (int i=0; i<num; i++) {
         int bit = get_first&index;
@@ -85,7 +106,8 @@ void brute_force_method(Item array[],int num){
         }
         index = index<<1;
     }
-    printf("\n");
+    printf(L_RED "\ntotal profile: %d, weight: %d\n"WHITE,max,saveWeight);
+    
     
 }
 #pragma mark- refinement_method
@@ -136,7 +158,7 @@ void refinement_method(Item array[],int num){
         rowArr[i] = 0;
     }
     int profit = findProfit(num, _W, array,rowArr,num);
-    printf("refinement_method total profit:%d\nIt contains:\n",profit);
+    printf("refinement_method => contains:\n");
     int weight = 0;
     for (int row = 1; row<num+1; row++) {
         if (rowArr[row] == 1) {
@@ -145,8 +167,8 @@ void refinement_method(Item array[],int num){
             printf("{%d,%d} ",item.profit,item.weight);
         }
     }
-    printf("\nweight: %d\n",weight);
-    
+    printf(L_RED"\ntotal profit: %d, weight: %d\n"WHITE,profit,weight);
+
 }
 
 
@@ -167,8 +189,8 @@ void sort_itemArr(Item array[],int num){
     }
 }
 
-int kwf2(Item array[], int num, int nodeindex, int weight,int profit){
-    int bound = profit;
+float kwf2(Item array[], int num, int nodeindex, int weight,int profit){
+    float bound = profit;
 
     while (weight<_W&&nodeindex<=num) {
         Item item = array[nodeindex-1];
@@ -177,9 +199,9 @@ int kwf2(Item array[], int num, int nodeindex, int weight,int profit){
             weight += item.weight;
             bound += item.profit;
         }else{
-//            float k = (_W-weight)*1.0/item.weight;
-//            weight = _W;
-//            bound += (int)(k*item.profit);
+            float k = (_W-weight)*1.0/item.weight;
+            weight = _W;
+            bound += (k*item.profit);
         }
         nodeindex++;
     }
@@ -190,7 +212,8 @@ bool isPromosing(Item array[],int num,int nodeindex,int weight, int profit,int m
     if (weight>=_W) {
         return false;
     }
-    int bound = kwf2(array, num, nodeindex+1, weight, profit);
+    float bound = kwf2(array, num, nodeindex+1, weight, profit);
+    
     return bound>maxProfit;
 }
 
@@ -214,6 +237,12 @@ void knapSack(Item array[],int num,int index,int profit,int weight,int *maxProfi
 
 void backtracking_method(Item array[],int num){
     sort_itemArr(array, num);
+    for (int i=0; i<num; i++) {
+        Item item = array[i];
+        float bound = kwf2(array, num, i+1, 0, 0);
+        printf("node {%d,%d}'s boud is %.2f\n",item.profit,item.weight,bound);
+    }
+    printf("\n");
     
     int bestset[num];
     int include[num];
@@ -224,7 +253,7 @@ void backtracking_method(Item array[],int num){
     int maxprofit=0;
     knapSack(array, num, 0, 0, 0, &maxprofit, bestset, include);
     
-    printf("backtracking_method total profit:%d\nIt contains:\n",maxprofit);
+    printf("backtracking_method => contains:\n");
     int weight = 0;
     for (int i = 0; i<num; i++) {
         if (bestset[i] == 1) {
@@ -233,27 +262,31 @@ void backtracking_method(Item array[],int num){
             printf("{%d,%d} ",item.profit,item.weight);
         }
     }
-    printf("\nweight: %d\n",weight);
+    printf(L_RED"\ntotal profile: %d, weight: %d\n"WHITE,maxprofit,weight);
 
 }
 
 
-
 int main(int argc, const char * argv[]) {
     // insert code here...
+    printf(RED "\n===== Program Begin! =====\n\n" WHITE);
     srand((unsigned int)time(0));
     int num = 4+rand()%5;
-    printf("create %d items!\n",num);
-
-    Item array[num];
-    createItems(array, num);
+    Item array[8];
+    if (DEBUG) {
+        creatTestItems(array, &num);
+    }else{
+        createItems(array, num);
+    }
+    
+    printf("create %d items:\n",num);
     printArray(array, num);
-    printf("W is %d\n",_W);
-    printf("\n===== brute_force_method =====\n");
+    printf(PURPLE"W is %d\n"WHITE,_W);
+    printf(BROWN"\n===== brute_force_method =====\n\n" WHITE);
     brute_force_method(array, num);
-    printf("\n===== refinement_method =====\n");
+    printf(BROWN"\n===== refinement_method =====\n\n"WHITE);
     refinement_method(array,num);
-    printf("\n===== backtracking =====\n");
+    printf(BROWN"\n===== backtracking =====\n\n"WHITE);
     backtracking_method(array,num);
     
     printf("\n");

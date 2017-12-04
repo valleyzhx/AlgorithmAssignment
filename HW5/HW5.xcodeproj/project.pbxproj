@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		F01B35191FCFABCE0051D702 /* HW5 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HW5; sourceTree = BUILT_PRODUCTS_DIR; };
 		F01B351C1FCFABCE0051D702 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		F0EBB8841FD5AE9600097416 /* HW5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HW5.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				F01B351C1FCFABCE0051D702 /* main.c */,
+				F0EBB8841FD5AE9600097416 /* HW5.h */,
 			);
 			path = HW5;
 			sourceTree = "<group>";
