@@ -106,7 +106,7 @@ void brute_force_method(Item array[],int num){
         }
         index = index<<1;
     }
-    printf(L_RED "\ntotal profile: %d, weight: %d\n"WHITE,max,saveWeight);
+    printf("\ntotal profile: "L_RED"%d"WHITE", weight: "L_RED"%d\n"WHITE,max,saveWeight);
     
     
 }
@@ -167,7 +167,8 @@ void refinement_method(Item array[],int num){
             printf("{%d,%d} ",item.profit,item.weight);
         }
     }
-    printf(L_RED"\ntotal profit: %d, weight: %d\n"WHITE,profit,weight);
+    printf("\ntotal profile: "L_RED"%d"WHITE", weight: "L_RED"%d\n"WHITE,profit,weight);
+
 
 }
 
@@ -262,14 +263,14 @@ void backtracking_method(Item array[],int num){
             printf("{%d,%d} ",item.profit,item.weight);
         }
     }
-    printf(L_RED"\ntotal profile: %d, weight: %d\n"WHITE,maxprofit,weight);
+    printf("\ntotal profile: "L_RED"%d"WHITE", weight: "L_RED"%d\n"WHITE,maxprofit,weight);
 
 }
 
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    printf(RED "\n===== Program Begin! =====\n\n" WHITE);
+    printf(CYAN "\n===== Program Begin! =====\n\n" WHITE);
     srand((unsigned int)time(0));
     int num = 4+rand()%5;
     Item array[8];
