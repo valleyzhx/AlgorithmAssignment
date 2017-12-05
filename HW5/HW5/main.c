@@ -154,12 +154,30 @@ int findProfit(int row, int weight,Item array[],int rowArr[],int num){
 
 void refinement_method(Item array[],int num){
     int rowArr[num+1];
-    for (int i=0; i<num+1; i++) {
-        rowArr[i] = 0;
-    }
-    int profit = findProfit(num, _W, array,rowArr,num);
-    printf("refinement_method => contains:\n");
+    
+    printf("\n");
     int weight = 0;
+    int profit = 0;
+    for (int row=1; row<num+1; row++) {
+        for (int i=0; i<num+1; i++) {
+            rowArr[i] = 0;
+        }
+        weight = 0;
+        profit = findProfit(row, _W, array,rowArr,num);
+        printf("NO.%d row profit:%d and entrys:",row,profit);
+        for (int i=0; i<num+1; i++) {
+            if (rowArr[i] == 1) {
+                Item item = array[i-1];
+                weight += item.weight;
+                printf("{%d,%d} ",item.profit,item.weight);
+            }
+        }
+        printf("\n");
+    }
+    
+   // int profit = findProfit(num, _W, array,rowArr,num);
+    weight = 0;
+    printf("refinement_method => contains:\n");
     for (int row = 1; row<num+1; row++) {
         if (rowArr[row] == 1) {
             Item item = array[row-1];
